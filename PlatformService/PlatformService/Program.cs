@@ -33,6 +33,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Console.WriteLine($"--> CommandService Endpoint: {builder.Configuration["CommandService"]}");
+
 PrepDb.PrepPopulation(app);
 
 app.Run();
