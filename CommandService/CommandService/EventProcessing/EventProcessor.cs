@@ -57,6 +57,7 @@ public class EventProcessor(IServiceScopeFactory serviceScopeFactory, IMapper ma
             {
                 repo.CreatePlatform(plat);
                 repo.SaveChanges();
+                Console.WriteLine("--> Platform added!");
             }
             else
             {
