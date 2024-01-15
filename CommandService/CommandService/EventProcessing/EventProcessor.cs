@@ -5,17 +5,8 @@ using CommandService.Models;
 using System.Text.Json;
 
 namespace CommandService.EventProcessing;
-public class EventProcessor : IEventProcessor
+public class EventProcessor(IServiceScopeFactory serviceScopeFactory, IMapper mapper) : IEventProcessor
 {
-    private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly IMapper _mapper;
-
-    public EventProcessor(IServiceScopeFactory serviceScopeFactory, IMapper mapper)
-    {
-        _serviceScopeFactory = serviceScopeFactory;
-        _mapper = mapper;
-    }
-
     public void ProcessEvent(string message)
     {
         var eventType = DetermineEvent(message);
@@ -54,14 +45,14 @@ public class EventProcessor : IEventProcessor
 
     private void AddPlatform(string platformPublishedMessage)
     {
-        using var scope = _serviceScopeFactory.CreateScope();
+        using var scope = serviceScopeFactory.CreateScope();
         var repo = scope.ServiceProvider.GetRequiredService<ICommandRepo>();
 
         var platformPublishedDto = JsonSerializer.Deserialize<PlatformPublishedDto>(platformPublishedMessage);
 
         try
         {
-            var plat = _mapper.Map<Platform>(platformPublishedDto);
+            var plat = mapper.Map<Platform>(platformPublishedDto);
             if (!repo.ExternalPlatformExists(plat.ExternalId))
             {
                 repo.CreatePlatform(plat);
