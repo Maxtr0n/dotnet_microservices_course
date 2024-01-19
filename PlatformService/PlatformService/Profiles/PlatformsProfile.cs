@@ -10,5 +10,9 @@ public class PlatformsProfile : Profile
         CreateMap<Platform, PlatformReadDto>();
         CreateMap<PlatformCreateDto, Platform>();
         CreateMap<PlatformReadDto, PlatformPublishedDto>();
+        CreateMap<Platform, GrpcPlatformModel>()
+            .ForMember(dest => dest.PlatformId, opt => opt.MapFrom(x => x.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(x => x.Name))
+            .ForMember(dest => dest.Publisher, opt => opt.MapFrom(x => x.Publisher));
     }
 }
